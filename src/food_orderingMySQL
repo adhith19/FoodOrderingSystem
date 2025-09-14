@@ -1,0 +1,38 @@
+-- 1. Create database
+CREATE DATABASE IF NOT EXISTS food_ordering;
+USE food_ordering;
+
+-- 2. Owner table (single admin user)
+CREATE TABLE IF NOT EXISTS owner (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(100) NOT NULL
+);
+
+-- 3. Menu items
+CREATE TABLE IF NOT EXISTS menu_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  price DECIMAL(10,2) NOT NULL
+);
+
+-- 4. Orders
+CREATE TABLE IF NOT EXISTS orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  total DECIMAL(10,2) NOT NULL
+);
+
+-- 5. Order items (line items per order)
+CREATE TABLE IF NOT EXISTS order_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL,
+  menu_item_id INT NOT NULL,
+  quantity INT NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id),
+  FOREIGN KEY (menu_item_id) REFERENCES menu_items(id)
+);
+
+-- 6. Insert default owner credentials
+INSERT IGNORE INTO owner(username, password)
+VALUES ('admin', 'password123');
